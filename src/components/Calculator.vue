@@ -8,7 +8,7 @@
     <div @click="append('7')" class="btn">7</div>
     <div @click="append('8')" class="btn">8</div>
     <div @click="append('9')" class="btn">9</div>
-    <div class="btn operator">x</div>
+    <div @click="times" class="btn operator">x</div>
     <div @click="append('4')" class="btn">4</div>
     <div @click="append('5')" class="btn">5</div>
     <div @click="append('6')" class="btn">6</div>
@@ -19,7 +19,7 @@
     <div class="btn operator">+</div>
     <div @click="append('0')" class="btn zero">0</div>
     <div @click="dot" class="btn">.</div>
-    <div class="btn operator">=</div>
+    <div @click="equal" class="btn operator">=</div>
   </div>
 </template>
 
@@ -27,7 +27,7 @@
 export default {
   data() {
     return {
-      current: "123",
+      current: "",
       operator: null,
       operatorClicked: false,
       previous: null
@@ -47,7 +47,7 @@ export default {
       this.current = `${parseFloat(this.current) / 100}`;
     },
     // Clear number if operator is clicked, otherwise
-    // add number to the end of current
+    // add number or symbol to the end of current
     append(number) {
       if (this.operatorClicked) {
         this.current = "";
@@ -59,6 +59,21 @@ export default {
       if (this.current.indexOf(".") === -1) {
         this.append(".");
       }
+    },
+    setPrevious() {
+      this.previous = this.current;
+      this.operatorClicked = true;
+    },
+    times() {
+      this.operator = (a, b) => a * b;
+      this.setPrevious();
+    },
+    equal() {
+      this.current = `${this.operator(
+        parseFloat(this.current),
+        parseFloat(this.previous)
+      )}`;
+      this.previous = null;
     }
   }
 };
@@ -94,3 +109,6 @@ export default {
   color: white;
 }
 </style>
+
+
+
